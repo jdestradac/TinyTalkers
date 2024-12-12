@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Logo from "@/components/Home";
+import Logo from "../components/Home";
 
 export default function Home() {
   return (

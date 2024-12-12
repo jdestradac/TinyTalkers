@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { createContext, useState } from "react";
 import { LuArrowLeftToLine, LuArrowRightFromLine } from "react-icons/lu";
-import SiderBarItem from "@/components/SideBar/SideBarItem";
+import SiderBarItem from "./SideBarItem";
 import { MdHome } from "react-icons/md";
 import { SiAlwaysdata } from "react-icons/si";
 import { FaNoteSticky } from "react-icons/fa6";
@@ -20,7 +20,7 @@ const SiderBar = () => {
 
   return (
     <aside className="min-h-screen">
-      <nav className="h-full fex flex-col bg-white border-r shadow-sm">
+      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">
           <Image
             src="/images/Icon.png"

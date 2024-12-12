@@ -1,4 +1,4 @@
-import GameMath from "@/components/GameMath/GameMath";
+import GameMath from "../../components/GameMath/GameMath"
 
 const GameFour = () => {
   return (
