@@ -2,20 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+.hexagon {
+  width: 150px; /* Ancho del hexágono */
+  height: 86.25px; /* Altura proporcional */
+  background-color: #a3d6ff;
+  position: relative;
+  transform: rotate(90deg); /* Sin rotación para mantener la base plana */
+}
+
+.hexagon:before,
+.hexagon:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 75px solid transparent; /* Ajustar bordes para mantener proporción */
+  border-right: 75px solid transparent;
+}
+
+.hexagon:before {
+  top: -43.125px; /* Posicionar la parte superior */
+  border-bottom: 43.125px solid #a3d6ff; /* Ajustar tamaño superior */
+}
+
+.hexagon:after {
+  bottom: -43.125px; /* Posicionar la parte inferior */
+  border-top: 43.125px solid #a3d6ff; /* Ajustar tamaño inferior */
+}
+
+.background-container {
+  position: relative;
+  padding: 2rem; /* Ajusta el padding según sea necesario */
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad del 90% */
+  border-radius: 1rem; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+  width: 24rem; /* Ajusta el tamaño */
+  max-width: 32rem; /* Ajusta el tamaño máximo */
+  overflow: hidden; /* Oculta cualquier desbordamiento */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://th.bing.com/th/id/R.7a767c00395390c1ab9b4aebbc0aac8a?rik=SFsmmmxnmbU5fQ&riu=http%3a%2f%2fst2.depositphotos.com%2f3580719%2f9679%2fv%2f950%2fdepositphotos_96793006-stock-illustration-seamless-background-with-formulas-and.jpg&ehk=hw87x%2bt3XMGJ%2bqDslepVDF3AicOtCTD7J%2btyyUBMJaI%3d&risl=&pid=ImgRaw&r=0');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.7; /* Opacidad del fondo */
+  z-index: -1; /* Coloca la imagen detrás del contenido */
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
 }

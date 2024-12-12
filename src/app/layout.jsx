@@ -1,5 +1,9 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import SiderBar from "@/components/SideBar/SiderBar";
+import SiderBarItem from "@/components/SideBar/SideBarItem";
+import { MdHome } from "react-icons/md";
+import { SiAlwaysdata } from "react-icons/si";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,9 +25,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
       >
-        {children}
+        <SiderBar />
+          
+        <main className="flex-1 p-4 min-h-screen">
+          {children}
+        </main>
       </body>
     </html>
   );
