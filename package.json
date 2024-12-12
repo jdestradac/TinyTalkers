@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "firebase": "^11.0.2",
+    "next": "15.0.2",
+    "prop-types": "^15.8.1",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -21,6 +24,10 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.12",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.2",
     "eslint": "^8",
     "eslint-config-next": "15.0.2",
     "postcss": "^8",
