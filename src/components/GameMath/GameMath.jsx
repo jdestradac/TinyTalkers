@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
+import Tooltip from "../Tooltip";
 const App = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -113,11 +113,16 @@ const App = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-600 p-4">
-      <div className="relative w-[600px] max-w-[800px] p-8 rounded-xl shadow-xl overflow-hidden bg-yellow-50">
+    <div>
+                  <div className="pt-4 pl-5">
+        <Tooltip title={"Adivina Quién o Qué Soy"} text={"Estimular el uso de vocabulario descriptivo y la comprensión de preguntas"} />
+      </div>
+
+         <div className="flex justify-center items-center min-h-screen bg-[#ededed]">
+      <div className="relative w-[600px] max-w-[800px] p-8 rounded-xl shadow-xl overflow-hidden bg-[#a3d6ff]">
         {currentLevel > 8 ? (
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-green-700 mb-6">
+            <h1 className="text-4xl font-bold text-[#614d48] mb-6">
               ¡Felicidades! Has completado todos los niveles.
             </h1>
             <button
@@ -139,10 +144,10 @@ const App = () => {
             ></div>
 
             <div className="relative z-10">
-              <h1 className="text-3xl font-extrabold text-center text-black mb-6">
+              <h1 className="text-3xl font-extrabold text-center text-[#614d48] mb-6">
                 ¡Completa la Secuencia Numérica!
               </h1>
-              <div className="text-4xl text-center mb-8 text-black flex justify-center mx-4">
+              <div className="text-4xl text-center mb-8 text-[#614d48] flex justify-center mx-4">
                 {sequence.map((num, index) =>
                   num === null ? (
                     <span
@@ -153,7 +158,7 @@ const App = () => {
                     </span>
                   ) : (
                     <span
-                      className="text-5xl font-semibold text-yellow-700 mx-6 hover:text-yellow-600 transition-all duration-300"
+                      className="text-5xl font-semibold text-[#614d48] mx-6 hover:text-yellow-600 transition-all duration-300"
                       key={index}
                     >
                       {num}
@@ -167,7 +172,7 @@ const App = () => {
                   {options.map((option, index) => (
                     <button
                       key={index}
-                      className="bg-yellow-600 text-white text-2xl py-3 px-6 rounded-xl hover:bg-yellow-500 transition-all duration-200"
+                      className="bg-[#feca7a] text-white text-2xl py-3 px-6 rounded-xl hover:bg-yellow-500 transition-all duration-200"
                       onClick={() => handleOptionClick(option)}
                     >
                       {option}
@@ -195,6 +200,8 @@ const App = () => {
         )}
       </div>
     </div>
+    </div>
+ 
   );
 };
 
