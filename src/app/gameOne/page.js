@@ -10,7 +10,6 @@ import BlueCard from "../../components/BlueCard";
 import LevelHolder from "../../components/LevelHolder"
 
 export default function GameOne() {
-  const [question, setQuestion] = useState(null);
   const [hint, setHints] = useState([]);
   const [level, setLevel] = useState("");
   const [feedback, setFeedback] = useState("");
@@ -27,7 +26,7 @@ export default function GameOne() {
 
   useEffect(() => {
     fetchQuestion();
-  }, [score,level]); 
+  }, [level]); 
 
   const fetchCurrentLevel = async () => {
     try {
