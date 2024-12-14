@@ -1,8 +1,8 @@
-import ProgressView from "../../components/Progress/ProgressView"
+import ProgressSelect from "../../components/Progress/ProgressSelect"
 const Progress = () => {
   return (
     <div className="relative">
-        <ProgressView/>
+        <ProgressSelect/>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 
 
-import { db } from '../googleinit';
+import { db } from '../googleinit.js';
 import { doc, getDoc } from 'firebase/firestore';
 
 async function testFirebaseConnection() {

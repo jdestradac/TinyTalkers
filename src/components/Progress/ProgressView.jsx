@@ -1,14 +1,22 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import useFetchGameLevel from "../../hooks/useFetchGameLevel"
+import {encodeBase64} from "../../helpers/helper"
+
 
 const ProgressView = () => {
-  const nivel_actual = 7; // Nivel actual del usuario
+  
+  const { currentLevelGame, loading } = useFetchGameLevel();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const gameParam = searchParams.get("game");
 
   const handleLevelClick = (level) => {
-    if (nivel_actual >= level) {
-      router.push(`/GameFour?level=${level}`);
+    if (currentLevelGame >= level) {
+      const encodedLevel = encodeBase64(level.toString());
+      router.push(`/${gameParam}?level=${encodedLevel}`);
     }
   };
 
@@ -23,7 +31,7 @@ const ProgressView = () => {
         width={150}
         height={120}
         className={`${
-          nivel_actual >= level ? "cursor-pointer hover:opacity-75" : "grayscale"
+          currentLevelGame >= level ? "cursor-pointer hover:opacity-75" : "grayscale"
         }`}
       />
       <span className="absolute top-0 left-0 text-xl font-bold text-white bg-black rounded-full w-8 h-8 flex items-center justify-center">
@@ -42,7 +50,7 @@ const ProgressView = () => {
         width={150}
         height={120}
         className={`${
-          nivel_actual >= level ? "cursor-pointer hover:opacity-75" : "grayscale"
+          currentLevelGame >= level ? "cursor-pointer hover:opacity-75" : "grayscale"
         }`}
       />
       <span className="absolute top-0 left-0 text-xl font-bold text-white bg-black scale-x-[-1] rounded-full w-8 h-8 flex items-center justify-center">
@@ -50,6 +58,20 @@ const ProgressView = () => {
       </span>
     </div>
   );
+
+  if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <Image
+            width={100}
+            height={100}
+            src="/bee.png"
+            alt="Loading..."
+            className="animate-spin"
+          />
+        </div>
+      );
+    }
 
   return (
     <div className="relative flex flex-col items-center justify-center">

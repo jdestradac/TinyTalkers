@@ -5,7 +5,6 @@ import { LuArrowLeftToLine, LuArrowRightFromLine } from "react-icons/lu";
 import SiderBarItem from "./SideBarItem";
 import { MdHome } from "react-icons/md";
 import { SiAlwaysdata } from "react-icons/si";
-import { FaNoteSticky } from "react-icons/fa6";
 import { useRouter, usePathname } from "next/navigation";
 
 export const SidebarContext = createContext();
@@ -56,12 +55,6 @@ const SiderBar = () => {
               text="Progreso"
               active={pathname === "/progreso"}
               onClick={() => handleNavigation("/progreso")}
-            />
-            <SiderBarItem
-              icon={<FaNoteSticky size={25} />}
-              text="Test"
-              active={pathname === "/test"}
-              onClick={() => handleNavigation("/test")}
             />
           </ul>
         </SidebarContext.Provider>

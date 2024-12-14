@@ -2,7 +2,7 @@
 'use client';
 
 import { collection, doc, setDoc } from 'firebase/firestore';
-import { db } from '../../../../googleinit';
+import { db } from '../../../../googleinit.js';
 
 export default function Page() {
   const seedDatabase = async () => {
