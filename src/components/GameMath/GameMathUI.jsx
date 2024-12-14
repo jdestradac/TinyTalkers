@@ -3,7 +3,6 @@ import Tooltip from "../Tooltip";
 
 const GameMathUI = ({
   currentLevel,
-  levelFromUrl,
   sequence,
   optionsAns,
   isAnswered,
@@ -30,7 +29,7 @@ const GameMathUI = ({
                 <p className="text-xl">Nivel:</p>
               </div>
               <div>
-                <p className="text-2xl">{levelFromUrl}</p>
+                <p className="text-2xl">{currentLevel}</p>
               </div>
             </div>
           </div>

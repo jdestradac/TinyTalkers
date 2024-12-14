@@ -4,14 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useFetchGameLevel from "../../hooks/useFetchGameLevel"
 import {encodeBase64} from "../../helpers/helper"
 
-
 const ProgressView = () => {
-  
-  const { currentLevelGame, loading } = useFetchGameLevel();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
+  const searchParams = useSearchParams()
   const gameParam = searchParams.get("game");
+  const { currentLevelGame, loading } = useFetchGameLevel(gameParam);
+  const router = useRouter();
+ ;
 
   const handleLevelClick = (level) => {
     if (currentLevelGame >= level) {

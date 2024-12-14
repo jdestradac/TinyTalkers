@@ -2,7 +2,14 @@ import { useState, useEffect } from 'react';
 import { collection, query, limit, getDocs } from 'firebase/firestore';
 import { db } from '../../googleinit';
 
-const useFetchGameLevel = () => {
+
+const idGame = {
+  "gameOne": "adivinaQuien",
+  "gameTwo": "completaLaFrase",
+  "GameFour": "GameFour",
+};
+
+const useFetchGameLevel = (gameCurrent) => {
   const [currentLevelGame, setCurrentLevelGame] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,7 +30,7 @@ const useFetchGameLevel = () => {
           ...doc.data(),
         }));
 
-        const gameFour = games.find(game => game.id === "GameFour");
+        const gameFour = games.find(game => game.id === idGame[gameCurrent]);
         const level = gameFour ? gameFour.currentLevel : null;
 
         setCurrentLevelGame(level);

@@ -47,7 +47,7 @@ const useFetchOptions = (collectionDb) => {
     };
 
     fetchOptions(); // Llamar a la función para obtener los datos
-  }, []);
+  }, [collectionDb]);
 
   // Retornar los datos, estado de carga y error
   return { options, loading, currentLevelGame, error };
