@@ -213,7 +213,7 @@ export default function AdivinaQuien() {
               <p className="text-xl">Nivel:</p>
             </div>
             <div>
-              <p className="text-2xl">{level}</p>
+              <p className="text-2xl">{currentLevel}</p>
             </div>
           </div>
         </div>
