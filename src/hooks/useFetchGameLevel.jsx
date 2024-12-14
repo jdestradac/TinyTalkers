@@ -32,7 +32,7 @@ const useFetchGameLevel = (gameCurrent) => {
 
         const gameFour = games.find(game => game.id === idGame[gameCurrent]);
         const level = gameFour ? gameFour.currentLevel : null;
-
+        
         setCurrentLevelGame(level);
       } catch (err) {
         console.error("Error fetching game level:", err);

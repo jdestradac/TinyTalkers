@@ -62,7 +62,7 @@ const Home = () => {
           {/* Segunda columna */}
           <div className="flex flex-col items-center gap-4 p-4">
             <div className="hexagon shadow-2xl bg-red-500 w-32 h-32 flex items-center justify-center">
-              <button className="bg-[#f2d99b] hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded rotate-[-90deg]" onClick={()=>handleLevelClick("/gameOne")}>
+              <button className="bg-[#f2d99b] hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded rotate-[-90deg]" onClick={()=>handleLevelClick("gameOne")}>
                 Jugar
               </button>
               <TbVocabulary size={60} className="rotate-[-90deg]" />

@@ -9,11 +9,12 @@ import {updateLevelInFirestore, encodeBase64, decodeBase64} from "../../helpers/
 const GameMath = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [levelFromUrl, setLevelFromUrl] = useState(1);
   const [feedback, setFeedback] = useState("");
   const [sequence, setSequence] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [currentLevel, setCurrentLevel] = useState(1);
+  const [currentLevel, setCurrentLevel] = useState(levelFromUrl);
   const [optionsAns, setOptionsAns] = useState([]);
   const { options, loading, currentLevelGame} = useFetchOptions("gameFour");
 
@@ -52,6 +53,7 @@ const GameMath = () => {
       console.log(`No data found for level ${level}`);
       return;
     }
+  
     setSequence(levelData.sequence);
     setCorrectAnswer(levelData.correctAnswer);
     setOptionsAns(shuffleArray(levelData.answerOptions));
@@ -66,6 +68,7 @@ const GameMath = () => {
     const levelParam = searchParams.get("level");
     if (levelParam) {
       const decodedLevel = parseInt(decodeBase64(levelParam), 10) || 1;
+      setLevelFromUrl(decodedLevel);
       setCurrentLevel(decodedLevel);
     }
   }, [searchParams]);
@@ -93,6 +96,7 @@ const GameMath = () => {
   return (
     <GameMathUI
       currentLevel={currentLevel}
+      levelFromUrl={levelFromUrl}
       sequence={sequence}
       optionsAns={optionsAns}
       isAnswered={isAnswered}
