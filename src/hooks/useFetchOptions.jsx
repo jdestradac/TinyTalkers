@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { collection, query, limit, getDocs } from 'firebase/firestore';
 import { db } from '../../googleinit';
 
+const idGame = {
+  "gameOne": "adivinaQuien",
+  "gameTwo": "completaLaFrase",
+  "gameFour": "GameFour",
+};
+
 const useFetchOptions = (collectionDb) => {
   const [options, setOptions] = useState([]); 
   const [currentLevelGame, setCurrentLevelGame] = useState(); 
@@ -33,7 +39,7 @@ const useFetchOptions = (collectionDb) => {
           id: doc.id,
           ...doc.data(),
         }));
-        const gameFour = games.find(game => game.id === "GameFour");
+        const gameFour = games.find(game => game.id === idGame[collectionDb]);
         const level = gameFour ? gameFour.currentLevel : null;
         console.log(games)
         setCurrentLevelGame(level)
