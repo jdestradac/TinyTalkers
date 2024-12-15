@@ -51,7 +51,7 @@ const ProgressSelect = () => {
       </span>
       <div className="hexagon shadow-2xl bg-red-500 w-45 h-45 flex items-center justify-center">
         <LuBrain size={60} className="rotate-[-90deg] ml-3" />
-        <button className="bg-[#f2d99b] hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded rotate-[-90deg]">
+        <button className="bg-[#f2d99b] hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded rotate-[-90deg]" onClick={() => handleLevelClick('gameTwo')}>
           Progreso
         </button>
       </div>

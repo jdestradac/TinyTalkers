@@ -21,8 +21,7 @@ const useFetchOptions = (collectionDb) => {
 
       try {
         const queryRef = query(
-          collection(db, collectionDb),
-          limit(8)
+          collection(db, collectionDb)
         );
         const snapshot = await getDocs(queryRef);
         const data = snapshot.docs.map(doc => ({
