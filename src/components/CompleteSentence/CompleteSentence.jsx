@@ -1,150 +1,91 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import CompleteSentenceUI from "./CompleteSentenceUI";
-import { db } from "../../../googleinit.js";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
-  doc,
-  getDoc,
-  getDocs,
-  where,
-  query,
-  limit,
-  collection,
-  updateDoc,
-} from "firebase/firestore";
+  updateLevelInFirestore,
+  encodeBase64,
+  decodeBase64,
+} from "../../helpers/helper";
+import CompleteSentenceUI from "./CompleteSentenceUI";
+import useFetchOptions from "../../hooks/useFetchOptions";
+import Image from "next/image";
 
 const CompleteSentence = () => {
-  const [question, setQuestion] = useState("");
-  const [img, setImg] = useState("");
-  const [level, setLevel] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [ question , setQuestion] = useState ()
+  const { options, loading, currentLevelGame } = useFetchOptions("gameTwo");
   const [feedback, setFeedback] = useState("");
-  const [score, setScore] = useState(0);
-  const [options, setOptions] = useState([]);
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  const [currentLevel, setCurrentLevel] = useState(1);
+  console.log(options)
+
+  const getDataForLevel = (level) => {
+    const filteredData = options.filter((item) => item.level === level);
+    if (filteredData.length === 0) {
+      console.log("No se encontraron datos para el nivel proporcionado");
+      return;
     }
-    return array;
-  };
-
-  useEffect(() => {
-    fetchQuestion();
-  }, [level]);
-
-  const fetchCurrentLevel = async () => {
-    try {
-      const docRef = doc(db, "juegos", "completaLaFrase");
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const firestoreLevel = docSnap.data().currentLevel;
-        console.log("Nivel en Firestore:", firestoreLevel);
-
-        if (firestoreLevel !== level) {
-          setLevel(firestoreLevel);
-          console.log("Nivel actualizado localmente:", firestoreLevel);
-        }
-      } else {
-        console.error("El documento no existe en Firestore.");
+  
+    const ramdomNumber = Math.floor(Math.random() * filteredData.length);
+    console.log(ramdomNumber);
+    const randomElement = filteredData[ramdomNumber];
+  
+   
+    const otherAnswers = options.filter(
+      (item) => item.id !== randomElement.id
+    );
+    const selectedAnswers = [];
+  
+    // Asegúrate de que no entres en un ciclo infinito si no hay suficientes elementos en otherAnswers
+    while (selectedAnswers.length < 2 && otherAnswers.length > 0) {
+      const ramdomNumber2 = Math.floor(Math.random() * otherAnswers.length);  // Cambiado a otherAnswers.length
+      const randomAnswer = otherAnswers[ramdomNumber2];
+      console.log(randomAnswer);
+      if (randomAnswer && !selectedAnswers.includes(randomAnswer?.answer)) {
+        selectedAnswers.push(randomAnswer?.answer);
+        otherAnswers.splice(ramdomNumber2, 1);  // Elimina la respuesta seleccionada para evitar duplicados
       }
-    } catch (error) {
-      console.error("Error obteniendo nivel desde Firestore:", error);
     }
-  };
-
-  useEffect(() => {
-    const initializeGame = async () => {
-      await fetchCurrentLevel(); // Asegura que el nivel está sincronizado con Firestore
-      await fetchQuestion(); // Luego obtiene las preguntas
+  
+    selectedAnswers.push(randomElement.answer);
+  
+    return {
+      categoria: randomElement?.category,
+      pregunta: randomElement?.question,
+      respuesta: randomElement?.answer,
+      imagen: randomElement?.img,
+      otrasRespuestas: selectedAnswers,
+      nivel: randomElement?.level,
     };
-
-    initializeGame();
-  }, [score]);
-
-  const fetchQuestion = async () => {
-    let questions = [];
-    try {
-      const queryRef = query(
-        collection(db, "gameTwo"),
-        where("level", "==", level),
-        limit(8)
-      );
-      const snapShot = await getDocs(queryRef);
-
-      if (!snapShot.empty) {
-        questions = snapShot.docs.map((doc) => doc.data());
-        console.log("Preguntas obtenidas:", questions);
-      } else {
-        console.log("No se encontraron preguntas para este nivel.");
-        return;
-      }
-    } catch (error) {
-      console.error("Error fetching question data:", error);
-      return;
-    }
-
-    if (questions.length === 0) {
-      console.error("No questions found; exiting function.");
-      return;
-    }
-
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const selectedQuestion = questions[randomIndex];
-    setQuestion(selectedQuestion.question);
-    setImg(selectedQuestion.img);
-    const category = selectedQuestion.category;
-
-    try {
-      const queryRef = query(
-        collection(db, "gameTwo"),
-        where("category", "==", category),
-        limit(8)
-      );
-      const differentOptionsSnapShot = await getDocs(queryRef);
-
-      if (!differentOptionsSnapShot.empty) {
-        const filteredDocs = differentOptionsSnapShot.docs.filter(
-          (doc) => doc.data().answer !== selectedQuestion.answer
-        );
-
-        const differentOptions = filteredDocs.slice(0, 2).map((doc) => ({
-          options: doc.data().answer,
-          isCorrect: false,
-        }));
-
-        const optionsArray = [
-          { options: selectedQuestion.answer, isCorrect: true },
-          ...differentOptions,
-        ];
-
-        setOptions(shuffleArray(optionsArray));
-        console.log("Array final de opciones:", optionsArray);
-      } else {
-        console.log("No matching documents found in the second query.");
-      }
-    } catch (error) {
-      console.error("Error fetching different images:", error);
-    }
   };
 
-  const checkOptions = async (isCorrect) => {
-    if (isCorrect) {
+  useEffect(() => {
+    if (!loading && options.length > 0) {
+      const quest = getDataForLevel(currentLevel.toString());
+      setQuestion(quest)
+    }
+  }, [loading, currentLevel]);
+
+  const handleNextLevel = async () => {
+    const nextLevel = currentLevel + 1;
+    if(currentLevelGame < nextLevel && nextLevel < 7){
+      await updateLevelInFirestore(nextLevel, "completaLaFrase")
+    }
+    setCurrentLevel(nextLevel);
+    const encodedLevel = encodeBase64(nextLevel.toString());
+    router.push(`?level=${encodedLevel}`);
+    setFeedback("");
+  };
+
+  const checkOptions = async (userAns) => {
+    if (userAns = question.respuesta) {
       setFeedback("¡Correcto! Adivinaste.");
       setTimeout(() => {
         setFeedback(null);
       }, 3000);
-      setScore((prevScore) => {
-        const newScore = prevScore + 1;
 
-        if (newScore % 3 === 0) {
-          const nextLevel = String(Number(level) + 1);
-          setLevel(nextLevel);
-          updateLevelInFirestore(nextLevel);
-        }
+      await handleNextLevel()
 
-        return newScore;
-      });
     } else {
       setFeedback("¡No te rindas! Intenta de nuevo.");
       setTimeout(() => {
@@ -154,27 +95,45 @@ const CompleteSentence = () => {
     }
   };
 
-  const updateLevelInFirestore = async (newLevel) => {
-    try {
-      const docRef = doc(db, "juegos", "adivinaQuien");
-      await updateDoc(docRef, {
-        currentLevel: newLevel, // Actualizar el campo
-      });
-      console.log("Nivel actualizado en Firestore:", newLevel);
-    } catch (error) {
-      console.error("Error actualizando nivel en Firestore:", error);
+  useEffect(() => {
+    const levelParam = searchParams.get("level");
+    if (levelParam) {
+      const decodedLevel = parseInt(decodeBase64(levelParam), 10) || 1;
+      setCurrentLevel(decodedLevel);
     }
+  }, [searchParams]);
+
+  const handleRestart = () => {
+    router.push("/");
+    setFeedback("");
   };
 
+
   return (
-    <CompleteSentenceUI
-      question={question}
-      img={img}
-      level={level}
-      feedback={feedback}
-      options={options}
-      checkOptions={checkOptions}
-    />
+    <>
+    {loading ? (
+      <div className="flex justify-center items-center h-screen">
+        <Image
+          width={100}
+          height={100}
+          src="/bee.png"
+          alt="Loading..."
+          className="animate-spin"
+        />
+      </div>
+    ) : (
+      <CompleteSentenceUI
+        question={question?.pregunta}
+        img={question?.imagen}  // Added optional chaining for safety
+        level={question?.nivel}  // Added optional chaining for safety
+        options={question?.otrasRespuestas} 
+        checkOptions={checkOptions}
+        feedback={feedback}
+        currentLevel={currentLevel}
+        handleRestart={handleRestart}
+      />
+    )}
+    </>
   );
 };
 
