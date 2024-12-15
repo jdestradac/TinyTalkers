@@ -66,9 +66,7 @@ export default function AdivinaQuien() {
   const fetchQuestion = async () => {
     let questions = [];
     try {
-      console.log("Level value:", level);
-
-      // Consulta para obtener hasta 3 preguntas del mismo nivel
+      
       const queryRef = query(
         collection(db, 'gameOne'),
         where('level', '==', level),
