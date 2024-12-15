@@ -163,16 +163,27 @@ export default function AdivinaQuien() {
   };
   const handleNextLevel = async () => {
     const nextLevel = String(Number(currentLevel) + 1);
-    if(level < nextLevel && nextLevel < 9){
-      await updateLevelInFirestore(nextLevel, "adivinaQuien")
+    if (level < nextLevel && nextLevel < 9) {
+      await updateLevelInFirestore(nextLevel, "adivinaQuien");
     }
     setCurrentLevel(nextLevel);
-    const encodedLevel = encodeBase64(nextLevel.toString());
-    router.push(`?level=${encodedLevel}`);
     setIsAnswered(false);
     setFeedback("");
   };
+  
+  // useEffect para realizar la navegación después de la actualización de currentLevel
+  useEffect(() => {
+    if (currentLevel) {
+      const encodedLevel = encodeBase64(currentLevel);
+      router.push(`?level=${encodedLevel}`);
 
+    }
+  }, [currentLevel]);
+
+  const handleRestart = () => {
+    router.push("/");
+    setFeedback("");
+  };
 
 
   useEffect(() => {
@@ -201,56 +212,90 @@ export default function AdivinaQuien() {
 
   return (
     <div>
-      <div className="pt-4 pl-5">
-        <Tooltip title={"Adivina Quién o Qué Soy"} text={"Estimular el uso de vocabulario descriptivo y la comprensión de preguntas"} />
+
+{currentLevel === 9 ? (
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-[#614d48] mb-6">
+          ¡Felicidades! Has completado todos los niveles.
+        </h1>
+        <button
+          className="bg-blue-600 text-white text-2xl py-3 px-6 rounded-xl hover:bg-blue-500 transition-all duration-200"
+          onClick={handleRestart}
+        >
+          Volver al Inicio
+        </button>
       </div>
-      <LevelHolder>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="p-2   flex flex-col items-center justify-center">
-            <div>
-              <p className="text-xl">Nivel:</p>
-            </div>
-            <div>
-              <p className="text-2xl">{currentLevel}</p>
-            </div>
-          </div>
+    ) : (
+      <div>
+        <div className="pt-4 pl-5">
+          <Tooltip
+            title={"Adivina Quién o Qué Soy"}
+            text={
+              "Estimular el uso de vocabulario descriptivo y la comprensión de preguntas"
+            }
+          />
         </div>
-
-      </LevelHolder>
-
-      <div className="flex flex-col items-center gap-4 mt-3">
-
-        <div className="flex justify-center gap-[300px]">
-          {hint.map((hint, index) => (index !== 1 ? (
-            <BlueCard key={index} className=" ">
-              <div className="">
-                <p className="text-lg ">{hint}</p>
+        <LevelHolder>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="p-2 flex flex-col items-center justify-center">
+              <div>
+                <p className="text-xl">Nivel:</p>
               </div>
-            </BlueCard>
-          ) : null))}
+              <div>
+                <p className="text-2xl">{currentLevel}</p>
+              </div>
+            </div>
+          </div>
+        </LevelHolder>
+
+        <div className="flex flex-col items-center gap-4 mt-3">
+          <div className="flex justify-center gap-[300px]">
+            {hint.map((hint, index) =>
+              index !== 1 ? (
+                <BlueCard key={index}>
+                  <div>
+                    <p className="text-lg">{hint}</p>
+                  </div>
+                </BlueCard>
+              ) : null
+            )}
+          </div>
+          <BlueCard>
+            <div>
+              <p className="text-lg">{hint[1]}</p>
+            </div>
+          </BlueCard>
         </div>
-        <BlueCard >
-          <div >
-            <p className="text-lg ">{hint[1]}</p>
-          </div>
-        </BlueCard>
-      </div>
 
-      <div className="flex justify-center items-center gap-4 mt-10"  >
-        {image.map((image, index) => (
-          <div style={{ cursor: 'pointer'}} className="bg-[#feca7a] w-[300px] min-h-[70px] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 flex justify-center items-center" onClick={() => checkImage(image.isCorrect)} key={index}>
-            <img
+        <div className="flex justify-center items-center gap-4 mt-10">
+          {image.map((image, index) => (
+            <div
+              style={{ cursor: "pointer" }}
+              className="bg-[#feca7a] w-[300px] min-h-[70px] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 flex justify-center items-center"
+              onClick={() => checkImage(image.isCorrect)}
               key={index}
-              src={image.url}
-              style={{ margin: '10px', width: '150px' }}
-            />
-          </div>
-        ))}
+            >
+              <img
+                key={index}
+                src={image.url}
+                style={{ margin: "10px", width: "150px" }}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-center items-center mt-8">
+          {feedback && (
+            <div className="feedback-message text-lg">{feedback}</div>
+          )}
+        </div>
       </div>
-      <div className="flex justify-center items-center mt-8"> {feedback && <div className="feedback-message text-lg">{feedback}</div>}</div>
+    )}
+  </div>
+    
 
 
-    </div>
+    
   );
 }
 
